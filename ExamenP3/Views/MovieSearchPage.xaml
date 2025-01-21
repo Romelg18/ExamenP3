@@ -11,7 +11,7 @@
     <VerticalStackLayout Padding="20" Spacing="15">
         <Entry x:Name="rgualoto_searchEntry"
                Text="{Binding SearchQuery}"
-               Placeholder="Ingrese el nombre de la película"
+               Placeholder="Ingrese el nombre de la película que desea buscar"
                HorizontalOptions="Fill" />
 
         <Button x:Name="rgualoto_searchButton"
