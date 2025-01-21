@@ -53,7 +53,7 @@ namespace ExamenP3.ViewModels
                         LeadActor = movieData.Actors[0],
                         Awards = movieData.Awards,
                         Website = movieData.Website,
-                        CustomName = "SCordova"
+                        CustomName = "Rgualoto"
                     };
 
                     _db.Insert(movie);

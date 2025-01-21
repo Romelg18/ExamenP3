@@ -11,10 +11,5 @@
         Title="Home"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
-    <TabBar>
-        <ShellContent Title="Buscar Películas" ContentTemplate="{DataTemplate local:MovieSearchPage}" />
-        <ShellContent Title="Películas Consultadas" ContentTemplate="{DataTemplate local:MoviesListPage}" />
-    </TabBar>
-
 
 </Shell>
