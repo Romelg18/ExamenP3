@@ -16,6 +16,6 @@ namespace ExamenP3.Models
         public string LeadActor { get; set; }
         public string Awards { get; set; }
         public string Website { get; set; }
-        public string CustomName { get; set; } // SCordova
+        public string CustomName { get; set; } 
     }
 }

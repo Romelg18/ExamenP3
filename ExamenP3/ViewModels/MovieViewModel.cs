@@ -31,6 +31,7 @@ namespace ExamenP3.ViewModels
         [RelayCommand]
         public async Task SearchMovie()
         {
+            
             if (string.IsNullOrWhiteSpace(SearchQuery))
             {
                 Message = "Ingrese un nombre de película.";
@@ -39,23 +40,28 @@ namespace ExamenP3.ViewModels
 
             try
             {
+                
                 var url = $"https://freetestapi.com/api/v1/movies?search={SearchQuery}&limit=1";
                 using var httpClient = new HttpClient();
+
+                
                 var response = await httpClient.GetFromJsonAsync<ApiResponse>(url);
 
                 if (response?.Data?.Length > 0)
                 {
+                    
                     var movieData = response.Data[0];
                     var movie = new Movie
                     {
                         Title = movieData.Title,
-                        Genre = movieData.Genre[0],
-                        LeadActor = movieData.Actors[0],
-                        Awards = movieData.Awards,
-                        Website = movieData.Website,
-                        CustomName = "Rgualoto"
+                        Genre = movieData.Genre?.FirstOrDefault() ?? "Desconocido",
+                        LeadActor = movieData.Actors?.FirstOrDefault() ?? "Desconocido",
+                        Awards = movieData.Awards ?? "No especificado",
+                        Website = movieData.Website ?? "No disponible",
+                        CustomName = "rgualoto"
                     };
 
+                    
                     _db.Insert(movie);
                     Movies.Add(movie);
                     Message = "Película guardada con éxito.";
@@ -67,17 +73,20 @@ namespace ExamenP3.ViewModels
             }
             catch
             {
-                Message = "Error al buscar la película.";
+                Message = "Error al buscar la película. Verifique su conexión a internet.";
             }
         }
 
         [RelayCommand]
         public void ClearSearch()
         {
+            
             SearchQuery = string.Empty;
+            Message = string.Empty;
         }
     }
 
+    
     public class ApiResponse
     {
         public MovieData[] Data { get; set; }

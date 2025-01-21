@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
     x:Class="ExamenP3.AppShell"
@@ -7,9 +8,18 @@
     Shell.FlyoutBehavior="Disabled"
     Title="ExamenP3">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        
+        <ShellContent
+            Title="Buscar Películas"
+            ContentTemplate="{DataTemplate local:MovieSearchPage}"
+            Route="MovieSearchPage" />
 
+        
+        <ShellContent
+            Title="Películas Consultadas"
+            ContentTemplate="{DataTemplate local:MoviesListPage}"
+            Route="MoviesListPage" />
+        
+    </TabBar>
 </Shell>
