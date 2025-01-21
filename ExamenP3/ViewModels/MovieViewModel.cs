@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CoreSpotlight;
 using ExamenP3.Models;
 using SQLite;
 using System.Collections.ObjectModel;
