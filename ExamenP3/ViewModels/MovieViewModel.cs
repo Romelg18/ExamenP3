@@ -25,7 +25,7 @@ namespace ExamenP3.ViewModels
         {
             try
             {
-                // Configurar la ruta de la base de datos en un directorio seguro
+                // Configuracion de  la ruta de la base de datos en un directorio 
                 var dbPath = Path.Combine(FileSystem.AppDataDirectory, "ExamenP3_Movies.db");
                 Console.WriteLine($"Ruta de la base de datos: {dbPath}");
 
@@ -47,7 +47,7 @@ namespace ExamenP3.ViewModels
         [RelayCommand]
         public async Task SearchMovie()
         {
-            // Verificar si el campo de búsqueda está vacío
+            // Verificacion del campo de busqueda
             if (string.IsNullOrWhiteSpace(SearchQuery))
             {
                 Message = "Ingrese un nombre de película.";
@@ -56,18 +56,18 @@ namespace ExamenP3.ViewModels
 
             try
             {
-                // Construir la URL de búsqueda con el parámetro de consulta
+                //Consumo de Api solicitada
                 var url = $"https://freetestapi.com/api/v1/movies?search={SearchQuery}&limit=1";
                 using var httpClient = new HttpClient();
 
-                // Obtener la respuesta de la API
+                // Obtencion de la respuesta de API 
                 var response = await httpClient.GetFromJsonAsync<ApiResponse>(url);
 
                 if (response?.Data?.Length > 0)
                 {
                     var movieData = response.Data[0];
 
-                    // Crear un nuevo objeto Movie con los datos obtenidos
+                    // Creacion de un nuevo objeto con los resultados obtenidos 
                     var movie = new Movie
                     {
                         Title = movieData.Title,
@@ -78,7 +78,7 @@ namespace ExamenP3.ViewModels
                         CustomName = "rgualoto"
                     };
 
-                    // Guardar la película en la base de datos y actualizar la lista
+                    // Guardar la informacion de la pelicula dentro de la base de datos y actualizar dicha lista
                     _db.Insert(movie);
                     Movies.Add(movie);
 
@@ -104,7 +104,7 @@ namespace ExamenP3.ViewModels
         }
     }
 
-    // Clases para deserializar la respuesta de la API
+    // Clase para deserealizar la API 
     public class ApiResponse
     {
         public MovieData[] Data { get; set; }
