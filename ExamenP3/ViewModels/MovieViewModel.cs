@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using ExamenP3.Models;
 using SQLite;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Net.Http.Json;
 
 namespace ExamenP3.ViewModels
@@ -22,10 +23,25 @@ namespace ExamenP3.ViewModels
 
         public MovieViewModel()
         {
-            // Configurar base de datos SQLite
-            _db = new SQLiteConnection("ExamenP3_Movies.db");
-            _db.CreateTable<Movie>();
-            Movies = new ObservableCollection<Movie>(_db.Table<Movie>().ToList());
+            try
+            {
+                // Configurar la ruta de la base de datos en un directorio seguro
+                var dbPath = Path.Combine(FileSystem.AppDataDirectory, "ExamenP3_Movies.db");
+                Console.WriteLine($"Ruta de la base de datos: {dbPath}");
+
+                // Inicializar la conexión SQLite
+                _db = new SQLiteConnection(dbPath);
+                _db.CreateTable<Movie>();
+
+                // Cargar datos existentes de la base de datos
+                Movies = new ObservableCollection<Movie>(_db.Table<Movie>().ToList());
+                Message = "Base de datos inicializada correctamente.";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al inicializar la base de datos: {ex.Message}");
+                Message = "Error al inicializar la base de datos.";
+            }
         }
 
         [RelayCommand]
@@ -40,17 +56,18 @@ namespace ExamenP3.ViewModels
 
             try
             {
-                // Construir la URL para la API
+                // Construir la URL de búsqueda con el parámetro de consulta
                 var url = $"https://freetestapi.com/api/v1/movies?search={SearchQuery}&limit=1";
                 using var httpClient = new HttpClient();
 
-                // Obtener datos desde la API
+                // Obtener la respuesta de la API
                 var response = await httpClient.GetFromJsonAsync<ApiResponse>(url);
 
                 if (response?.Data?.Length > 0)
                 {
-                    // Extraer la primera película de la respuesta
                     var movieData = response.Data[0];
+
+                    // Crear un nuevo objeto Movie con los datos obtenidos
                     var movie = new Movie
                     {
                         Title = movieData.Title,
@@ -61,9 +78,10 @@ namespace ExamenP3.ViewModels
                         CustomName = "rgualoto"
                     };
 
-                    // Guardar en la base de datos SQLite
+                    // Guardar la película en la base de datos y actualizar la lista
                     _db.Insert(movie);
                     Movies.Add(movie);
+
                     Message = "Película guardada con éxito.";
                 }
                 else
@@ -71,8 +89,9 @@ namespace ExamenP3.ViewModels
                     Message = "No se encontró ninguna película.";
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error al buscar la película: {ex.Message}");
                 Message = "Error al buscar la película. Verifique su conexión a internet.";
             }
         }
@@ -80,7 +99,6 @@ namespace ExamenP3.ViewModels
         [RelayCommand]
         public void ClearSearch()
         {
-            // Limpiar el campo de búsqueda
             SearchQuery = string.Empty;
             Message = string.Empty;
         }
