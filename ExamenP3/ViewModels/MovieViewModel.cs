@@ -5,6 +5,7 @@ using SQLite;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 namespace ExamenP3.ViewModels
 {
@@ -25,7 +26,7 @@ namespace ExamenP3.ViewModels
         {
             try
             {
-                // Configuracion de  la ruta de la base de datos en un directorio 
+                // Configuración de la ruta de la base de datos en un directorio 
                 var dbPath = Path.Combine(FileSystem.AppDataDirectory, "ExamenP3_Movies.db");
                 Console.WriteLine($"Ruta de la base de datos: {dbPath}");
 
@@ -47,27 +48,29 @@ namespace ExamenP3.ViewModels
         [RelayCommand]
         public async Task SearchMovie()
         {
-            // Verificacion del campo de busqueda
+            // Verificación del campo de búsqueda
             if (string.IsNullOrWhiteSpace(SearchQuery))
             {
                 Message = "Ingrese un nombre de película.";
+                Console.WriteLine("Campo de búsqueda vacío.");
                 return;
             }
 
             try
             {
-                //Consumo de Api solicitada
+                // Consumo de la API solicitada
                 var url = $"https://freetestapi.com/api/v1/movies?search={SearchQuery}&limit=1";
                 using var httpClient = new HttpClient();
 
-                // Obtencion de la respuesta de API 
+                // Obtención de la respuesta de la API
                 var response = await httpClient.GetFromJsonAsync<ApiResponse>(url);
+                Console.WriteLine($"Respuesta de la API: {response}");
 
                 if (response?.Data?.Length > 0)
                 {
                     var movieData = response.Data[0];
 
-                    // Creacion de un nuevo objeto con los resultados obtenidos 
+                    // Creación de un nuevo objeto con los resultados obtenidos
                     var movie = new Movie
                     {
                         Title = movieData.Title,
@@ -78,15 +81,17 @@ namespace ExamenP3.ViewModels
                         CustomName = "rgualoto"
                     };
 
-                    // Guardar la informacion de la pelicula dentro de la base de datos y actualizar dicha lista
+                    // Guardar la información de la película dentro de la base de datos y actualizar la lista
                     _db.Insert(movie);
                     Movies.Add(movie);
 
                     Message = "Película guardada con éxito.";
+                    Console.WriteLine($"Película guardada: {movie.Title}");
                 }
                 else
                 {
                     Message = "No se encontró ninguna película.";
+                    Console.WriteLine("No se encontró ninguna película en la API.");
                 }
             }
             catch (Exception ex)
@@ -104,7 +109,7 @@ namespace ExamenP3.ViewModels
         }
     }
 
-    // Clase para deserealizar la API 
+    // Clase para deserializar la respuesta de la API
     public class ApiResponse
     {
         public MovieData[] Data { get; set; }
@@ -119,4 +124,3 @@ namespace ExamenP3.ViewModels
         public string Website { get; set; }
     }
 }
-
