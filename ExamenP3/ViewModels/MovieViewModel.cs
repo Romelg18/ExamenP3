@@ -59,7 +59,7 @@ namespace ExamenP3.ViewModels
             try
             {
                 // Consumo de la API solicitada
-                var url = $"https://freetestapi.com/api/v1/movies?search={SearchQuery}&limit=1";
+                var url = $"https://freetestapi.com/api/v1/movies?search={SearchQuery}&limit=1"; //profe al final tuve un problema con la api , al principio daba la pelicula pero solo algunas caracteristicas pero luego la actualice y ahora no se consume correctamente :(
                 using var httpClient = new HttpClient();
 
                 // Obtención de la respuesta de la API
