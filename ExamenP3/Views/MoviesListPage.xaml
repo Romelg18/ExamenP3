@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ExamenP3.ViewModels"
              x:Class="ExamenP3.Views.MoviesListPage"
-             Title="RGualoto - Películas Consultadas">
+             Title="Romel Gualoto - Películas Consultadas">
     <ContentPage.BindingContext>
         <vm:MovieViewModel />
     </ContentPage.BindingContext>
