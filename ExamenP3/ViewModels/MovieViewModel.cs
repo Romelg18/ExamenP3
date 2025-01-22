@@ -22,6 +22,7 @@ namespace ExamenP3.ViewModels
 
         public MovieViewModel()
         {
+            // Configurar base de datos SQLite
             _db = new SQLiteConnection("ExamenP3_Movies.db");
             _db.CreateTable<Movie>();
             Movies = new ObservableCollection<Movie>(_db.Table<Movie>().ToList());
@@ -30,7 +31,7 @@ namespace ExamenP3.ViewModels
         [RelayCommand]
         public async Task SearchMovie()
         {
-            
+            // Verificar si el campo de búsqueda está vacío
             if (string.IsNullOrWhiteSpace(SearchQuery))
             {
                 Message = "Ingrese un nombre de película.";
@@ -39,16 +40,16 @@ namespace ExamenP3.ViewModels
 
             try
             {
-                
+                // Construir la URL para la API
                 var url = $"https://freetestapi.com/api/v1/movies?search={SearchQuery}&limit=1";
                 using var httpClient = new HttpClient();
 
-                
+                // Obtener datos desde la API
                 var response = await httpClient.GetFromJsonAsync<ApiResponse>(url);
 
                 if (response?.Data?.Length > 0)
                 {
-                    
+                    // Extraer la primera película de la respuesta
                     var movieData = response.Data[0];
                     var movie = new Movie
                     {
@@ -60,7 +61,7 @@ namespace ExamenP3.ViewModels
                         CustomName = "rgualoto"
                     };
 
-                    
+                    // Guardar en la base de datos SQLite
                     _db.Insert(movie);
                     Movies.Add(movie);
                     Message = "Película guardada con éxito.";
@@ -79,13 +80,13 @@ namespace ExamenP3.ViewModels
         [RelayCommand]
         public void ClearSearch()
         {
-            
+            // Limpiar el campo de búsqueda
             SearchQuery = string.Empty;
             Message = string.Empty;
         }
     }
 
-    
+    // Clases para deserializar la respuesta de la API
     public class ApiResponse
     {
         public MovieData[] Data { get; set; }
